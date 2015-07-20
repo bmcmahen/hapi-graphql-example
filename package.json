@@ -5,12 +5,22 @@
   "main": "index.js",
   "dependencies": {
     "babel": "^5.6.23",
+    "babel-runtime": "^5.7.0",
+    "boom": "^2.8.0",
+    "debug": "^2.2.0",
     "graphql": "^0.1.6",
-    "hapi": "^8.8.0"
+    "hapi": "^8.8.0",
+    "jquery": "^2.1.4",
+    "mongoose": "^4.0.7",
+    "superagent": "^1.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-core": "^5.7.4",
+    "babel-loader": "^5.3.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "./node_modules/.bin/nodemon index.js --ignore 'static/*' --ignore 'client/*'",
+    "client": "./node_modules/.bin/webpack --config webpack.config.js --watch --colors"
   },
   "author": "",
   "license": "ISC"
