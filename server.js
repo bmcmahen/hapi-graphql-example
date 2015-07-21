@@ -26,7 +26,8 @@ server.route({
           </head>
           <body>
             <h1>Hello world.</h1>
-            <p>Try posting queries and mutations to /mutations</p>
+            <p>Try posting queries and mutations</p>
+            <p>The user name must contain 'ben'. It will 403 otherwise, to demonstrate some semblance of authorization</p>
 
             <form id='query'>
               <input type='text' name='id' placeholder='user id' />
@@ -37,7 +38,7 @@ server.route({
             <form id='mutate' style='margin-top: 50px;'>
               <input type='text' name='id' placeholder='User id' />
               <input type='text' name='name' placeholder='User name' />
-              <input type='submit' value='save changes' />
+              <input type='submit' value='mutate user' />
             </form>
             <script src='/static/bundle.js'></script>
           </body>
@@ -57,17 +58,28 @@ server.route({
   },
   handler: async (request, reply) => {
     let {query, params} = request.payload
+    let fakeSession = {
+      name: 'ben'
+    }
 
     try {
-      let result = await graphql(schema, query, '', params)
+      let result = await graphql(schema, query, fakeSession, params)
+
+      // not really sure how best to handle errors because, on the one
+      // hand you should be able to make multiple queries -- some may success,
+      // while others may fail. Hrmph.
+
       if (result.errors) {
-        console.error(result.errors)
+
+        if (result.errors[0].message === '403') {
+          return reply(Boom.forbidden(result.errors))
+        }
+
         return reply(Boom.badRequest(result.errors))
       }
-      console.log('result', result)
       return reply(result)
     } catch(err) {
-      console.error('err', err)
+      console.error('Error caught', err)
       reply(Boom.wrap(err))
     }
   }

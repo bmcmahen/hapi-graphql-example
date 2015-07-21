@@ -6,6 +6,7 @@ import {
   GraphQLInt,
   GraphQLInterfaceType
 } from 'graphql/lib/type'
+import Boom from 'boom'
 
 import Human from './human'
 
@@ -68,13 +69,17 @@ var humanType = new GraphQLObjectType({
       },
       name: {
         type: GraphQLString,
-        description: 'The name of the human'
+        description: 'The name of the human',
+        resolve: (me) => {
+          return me.name + ' is my name'
+        }
       },
       email: {
         type: GraphQLString,
         description: 'The email of the human',
-        resolve: () => {
-          return 'ben.mcmahen@gmail.com'
+        resolve: (me) => {
+          // we can create 'virtual' fields incredibly easily.
+          return me.name + '.mcmahen@gmail.com'
         }
       }
     }
@@ -130,13 +135,22 @@ var mutationType = new GraphQLObjectType({
           }
         },
 
-        resolve: (obj, {id, name}, source, fieldASTs) => {
+        resolve: (obj, {id, name}, session, fieldASTs) => {
+          // let's only allow the user to be updated if it includes
+          // the name 'ben'
+
           var projections = getProjection(fieldASTs)
-          return Human
-            .update({ _id: id }, {$set: { name: name }})
-            .then(() => {
-              return Human.findById(id, projections)
-            })
+
+          if (~name.indexOf(session.name)) {
+            return Human
+              .update({ _id: id }, {$set: { name: name }})
+              .then(() => {
+                return Human.findById(id, projections)
+              })
+          }
+
+          return Promise.reject(403)
+
         }
       }
     }
