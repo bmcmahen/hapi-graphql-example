@@ -12,6 +12,7 @@
     "hapi": "^8.8.0",
     "jquery": "^2.1.4",
     "mongoose": "^4.0.7",
+    "stringifier": "^1.2.0",
     "superagent": "^1.2.0"
   },
   "devDependencies": {

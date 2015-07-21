@@ -101,7 +101,6 @@ var queryType = new GraphQLObjectType({
         },
         resolve: (root, {id}, source, fieldASTs) => {
           var projections = getProjection(fieldASTs)
-          console.log('resolve human query with projection %o', projections)
           return Human.findById(id, projections)
         }
       }

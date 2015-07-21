@@ -9,6 +9,7 @@ export default function mutateHuman (id, name, fn) {
      mutation updateHuman($id: String! $name: String!) {
        updateHuman(id: $id name: $name) {
          name
+         email
        }
      }
     `

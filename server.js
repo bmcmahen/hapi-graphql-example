@@ -33,7 +33,7 @@ server.route({
               <input type='text' name='id' placeholder='user id' />
               <button id='get-user' type='submit' style='margin-top: 15px;'>Query User</button>
             </form>
-            <div id='query-result'>Result will show here</div>
+            <code><pre id='query-result'>Result will show here</pre></code>
 
             <form id='mutate' style='margin-top: 50px;'>
               <input type='text' name='id' placeholder='User id' />
