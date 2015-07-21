@@ -10,6 +10,7 @@ export default function getUser(id, fn) {
       query: `{
         human(id: "${id}") {
           name
+          email
         }
       }`
     })

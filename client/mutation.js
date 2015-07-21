@@ -6,7 +6,7 @@ let log = new Debug('client:mutation')
 export default function mutateHuman (id, name, fn) {
 
   let query = `
-     mutation M(id: String! $name: String!) {
+     mutation updateHuman($id: String! $name: String!) {
        updateHuman(id: $id name: $name) {
          name
        }
@@ -17,6 +17,8 @@ export default function mutateHuman (id, name, fn) {
     id: id,
     name: name
   }
+
+  log('mutation query %s, params: %o', query, params)
 
   request
     .post('/graphql')

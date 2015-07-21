@@ -17,7 +17,7 @@ server.connection({
 server.route({
   method: 'GET',
   path: '/',
-  handler: function (request, reply) {
+  handler: async (request, reply) => {
     return reply(
       `
         <html>
@@ -55,18 +55,21 @@ server.route({
       allow: 'application/json'
     }
   },
-  handler: (request, reply) => {
+  handler: async (request, reply) => {
     let {query, params} = request.payload
-    console.log('making request', query, params)
-    graphql(schema, query, '', params)
-      .then(result => {
-        if (result.errors) {
-          console.log('errors', result)
-          return reply(Boom.badRequest(result.errors))
-        }
-        return reply(result)
-      })
-      .catch(err => reply(err))
+
+    try {
+      let result = await graphql(schema, query, '', params)
+      if (result.errors) {
+        console.error(result.errors)
+        return reply(Boom.badRequest(result.errors))
+      }
+      console.log('result', result)
+      return reply(result)
+    } catch(err) {
+      console.error('err', err)
+      reply(Boom.wrap(err))
+    }
   }
 })
 

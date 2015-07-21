@@ -72,7 +72,10 @@ var humanType = new GraphQLObjectType({
       },
       email: {
         type: GraphQLString,
-        description: 'The email of the human'
+        description: 'The email of the human',
+        resolve: () => {
+          return 'ben.mcmahen@gmail.com'
+        }
       }
     }
   }
@@ -132,7 +135,7 @@ var mutationType = new GraphQLObjectType({
           return Human
             .update({ _id: id }, {$set: { name: name }})
             .then(() => {
-              return User.findById(id, projections)
+              return Human.findById(id, projections)
             })
         }
       }
